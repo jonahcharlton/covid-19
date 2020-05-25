@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import s from 'styled-components'
+import { DFPSlotsProvider, AdSlot } from 'react-dfp'
 
 import Article from '../components/Article'
 import LiveUpdate from '../components/LiveUpdate'
@@ -72,6 +73,29 @@ const TimelineDiv = s.div`
   margin-top: 2rem;
 `
 
+const AdWrapper = s.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  padding: 0;
+`
+
+const useDfpSlot = ({ path, size, id }) => {
+  useEffect(() => {
+    const googletag = window.googletag || {};
+    googletag.cmd = googletag.cmd || [];
+    googletag.cmd.push(function() {
+      googletag.defineSlot(path, size, id).addService(googletag.pubads());
+      googletag.pubads().enableSingleRequest();
+      googletag.enableServices();
+    })
+
+    googletag.cmd.push(function() {
+      googletag.display(id)
+    });
+  }, [path, size, id]);
+};
+
 const Home = ({ latestStories }) => {
   const [liveUpdates, setLiveUpdates] = useState(null)
   const [newsCenterpiece, setNewsCenterpiece] = useState(null)
@@ -85,7 +109,18 @@ const Home = ({ latestStories }) => {
   const [mmloading, setMMLoading] = useState(true)
   const [opinionLoading, setOpinionLoading] = useState(true)
   const [streetLoading, setStreetLoading] = useState(true)
-  
+
+  // useDfpSlot({
+  //   path: '/12234093/DP.com-Leaderboard',
+  //   size: [728, 90],
+  //   id: 'div-gpt-ad-1485118541142-1',
+  // })
+
+  // useDfpSlot({
+  //   path: '/12234093/DP.com-mobile-leaderboard',
+  //   size: [320, 50],
+  //   id: 'div-gpt-ad-1485118541142-0',
+  // })
 
   useEffect(async () => {
     initGA()
@@ -185,6 +220,23 @@ const Home = ({ latestStories }) => {
       </SectionDiv> */}
 
       <Lines className="container" />
+
+      <DFPSlotsProvider>
+        <AdWrapper>
+          <AdSlot adUnit="/12234093/DP.com-Leaderboard" sizes={[[728, 90]]} />
+        </AdWrapper>
+      </DFPSlotsProvider>
+
+      <AdWrapper>
+        {/* <div id='div-gpt-ad-1485118541142-1' style={{ height: '90px', width: '728px' }} /> */}
+        {/* <div id='div-gpt-ad-1485118541142-0' style={{ height: '50px', width: '320px' }} /> */}
+      </AdWrapper>
+
+      <Lines className="container" />
+
+      {/* <div id='div-gpt-ad-1485118541142-1'>
+        <GPT adUnitPath='/12234093/DP.com-Leaderboard' slotSize={[728, 90]} id='div-gpt-ad-1485118541142-1' />
+      </div> */}
 
       <SectionDiv className="container" id="opinion">
         <div className="row">
